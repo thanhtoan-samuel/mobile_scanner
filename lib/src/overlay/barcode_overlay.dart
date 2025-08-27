@@ -11,6 +11,7 @@ class BarcodeOverlay extends StatefulWidget {
     super.key,
     this.color = const Color(0x4DF44336),
     this.style = PaintingStyle.fill,
+    this.showTextInScanBox = true,
   });
 
   /// The [BoxFit] to use when painting the barcode box.
@@ -28,6 +29,9 @@ class BarcodeOverlay extends StatefulWidget {
   ///
   /// Defaults to [PaintingStyle.fill].
   final PaintingStyle style;
+
+  /// Whether to show the barcode value in the scan box.
+  final bool showTextInScanBox;
 
   @override
   State<BarcodeOverlay> createState() => _BarcodeOverlayState();
@@ -80,6 +84,7 @@ class _BarcodeOverlayState extends State<BarcodeOverlay> {
                       style: widget.style,
                       barcodeValue: barcode.rawValue ?? '',
                       textPainter: _textPainter,
+                      visibleTextPainter: widget.showTextInScanBox,
                     ),
                   ),
             ];

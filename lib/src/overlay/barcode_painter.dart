@@ -16,6 +16,7 @@ class BarcodePainter extends CustomPainter {
     required this.style,
     required this.textPainter,
     this.strokeWidth = 4.0,
+    this.visibleTextPainter = true,
   });
 
   /// The corners of the barcode.
@@ -44,6 +45,9 @@ class BarcodePainter extends CustomPainter {
 
   /// The width of the border.
   final double strokeWidth;
+
+  /// Whether to show the text painter.
+  final bool visibleTextPainter;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -101,6 +105,7 @@ class BarcodePainter extends CustomPainter {
     const double maxTextSize = 12; // Maximum size
     final double finalTextSize = textSize.clamp(minTextSize, maxTextSize);
 
+    if (!visibleTextPainter) return;
     // Draw barcode value inside the overlay with rotation
     final textSpan = TextSpan(
       text: barcodeValue,

@@ -4,32 +4,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:mobile_scanner_example/widgets/buttons/analyze_image_button.dart';
-import 'package:mobile_scanner_example/widgets/buttons/pause_button.dart';
-import 'package:mobile_scanner_example/widgets/buttons/start_stop_button.dart';
-import 'package:mobile_scanner_example/widgets/buttons/switch_camera_button.dart';
-import 'package:mobile_scanner_example/widgets/buttons/toggle_flashlight_button.dart';
 import 'package:mobile_scanner_example/widgets/dialogs/barcode_format_dialog.dart';
 import 'package:mobile_scanner_example/widgets/dialogs/box_fit_dialog.dart';
 import 'package:mobile_scanner_example/widgets/dialogs/detection_speed_dialog.dart';
 import 'package:mobile_scanner_example/widgets/dialogs/detection_timeout_dialog.dart';
 import 'package:mobile_scanner_example/widgets/dialogs/resolution_dialog.dart';
-import 'package:mobile_scanner_example/widgets/scanned_barcode_label.dart';
 import 'package:mobile_scanner_example/widgets/scanner_error_widget.dart';
-import 'package:mobile_scanner_example/widgets/zoom_scale_slider_widget.dart';
-
-enum _PopupMenuItems {
-  cameraResolution,
-  detectionSpeed,
-  detectionTimeout,
-  returnImage,
-  invertImage,
-  autoZoom,
-  useBarcodeOverlay,
-  boxFit,
-  formats,
-  scanWindow,
-}
 
 /// Implementation of Mobile Scanner example with advanced configuration
 class MobileScannerAdvanced extends StatefulWidget {
@@ -200,7 +180,7 @@ class _MobileScannerAdvancedState extends State<MobileScannerAdvanced> {
     late final scanWindow = Rect.fromCenter(
       center: MediaQuery.sizeOf(context).center(const Offset(0, -100)),
       width: 300,
-      height: 200,
+      height: 150,
     );
 
     return Scaffold(
@@ -303,13 +283,26 @@ class _MobileScannerAdvancedState extends State<MobileScannerAdvanced> {
                     // to handle lifecycle changes yourself
                     scanWindow: useScanWindow ? scanWindow : null,
                     controller: controller,
+
+                    onDetect: (barcodes) {
+                      for (final barcode in barcodes.barcodes) {
+                        debugPrint('Barcode found! ${barcode.rawValue}');
+                      }
+                    },
+                    onDetectError: (error, stackTrace) {
+                      debugPrint('Error $error\nStacktrace: $stackTrace');
+                    },
                     errorBuilder: (context, error) {
                       return ScannerErrorWidget(error: error);
                     },
                     fit: boxFit,
                   ),
                   if (useBarcodeOverlay)
-                    BarcodeOverlay(controller: controller!, boxFit: boxFit),
+                    BarcodeOverlay(
+                      controller: controller!,
+                      boxFit: boxFit,
+                      showTextInScanBox: false,
+                    ),
                   // The scanWindow is not supported on the web.
                   if (useScanWindow)
                     ScanWindowOverlay(
@@ -367,35 +360,6 @@ class _MobileScannerAdvancedState extends State<MobileScannerAdvanced> {
                         ),
                       ),
                     ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      height: 200,
-                      color: const Color.fromRGBO(0, 0, 0, 0.4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: ScannedBarcodeLabel(
-                              barcodes: controller!.barcodes,
-                            ),
-                          ),
-                          if (!kIsWeb) ZoomScaleSlider(controller: controller!),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ToggleFlashlightButton(controller: controller!),
-                              StartStopButton(controller: controller!),
-                              PauseButton(controller: controller!),
-                              SwitchCameraButton(controller: controller!),
-                              AnalyzeImageButton(controller: controller!),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
     );
