@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:mobile_scanner_example/screens/mobile_scanner_advanced.dart';
+import 'package:mobile_scanner_example/screens/mobile_scanner_animation.dart';
 
 void main() {
   runApp(
@@ -168,14 +169,14 @@ class _ExampleHome extends StatelessWidget {
                 Icons.settings_remote,
               ),
               // TODO(juliansteenbakker): Fix picklist example
-              // _buildItem(
-              //   context,
-              //   'Mobile Scanner with Crosshair',
-              //  'Example of a mobile scanner instance with a crosshair, that '
-              //       'only detects barcodes which the crosshair hits.',
-              //   const BarcodeScannerPicklist(),
-              //   Icons.list,
-              // ),
+              _buildItem(
+                context,
+                'Animation Mobile Scanner',
+                'Example of an animation mobile scanner instance with a '
+                    'controller.',
+                const MobileScannerAnimation(),
+                Icons.settings_remote,
+              ),
               const SizedBox(height: 20),
             ],
           ),
